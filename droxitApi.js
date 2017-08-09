@@ -11,6 +11,7 @@ var spawn = require('child_process').spawn;
 var bunyan = require('bunyan');
 
 var exp = module.exports;
+var _plugins = {};
 
 function setEndpoints(app, config, logger) {
 	// handle errors gracefully
@@ -127,6 +128,17 @@ function setEndpoints(app, config, logger) {
 						logger.error({path: "/" + path.join("/")}, "faulty configuration: endpoint is missing options field");
 						res.status(500).send('{"reason": "internal server error"}');
 					}
+				} else if(endpoint.handler.type === 'plugin') {
+					var pname;
+					var func;
+					if(('name' in endpoint.handler) && ('function' in endpoint.handler)) { 
+						pname = endpoint.handler.name;
+					} else {
+						//TODO continue here
+						logger.error("faulty configuration: plugin handler is missing name or function argument");
+						res.status(500).send('{"reason": "internal server error"}');
+					}
+					var func = endpoint.handler.function;
 				} else {
 					logger.error({path: "/" + path.join("/")}, "faulty configuration: invalid endpoint handler type");
 					res.status(500).send('{"reason": "internal server error"}');
@@ -153,7 +165,8 @@ function startServer(app, config) {
 // loogerName is only relevant if you want to start multiple servers from within the same
 // process and want to separate their logging (which might be a good idea since their output would
 // be indistinguishable otherwise)
-exp.new = function(config, loggerName='droxit-api-server-logger') {
+exp.new = function(config, plugins, loggerName='droxit-api-server-logger') {
+	_plugins = plugins;
 	var app = express();
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({extended: true}));
