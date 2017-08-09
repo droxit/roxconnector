@@ -1,0 +1,61 @@
+{
+  "SYSTEM": {
+	"port": 7475
+  },
+  "REST": {
+	"GET": {
+	  "clinicaltrials": {
+		"getcounts": {
+		  "handler": {
+			"type": "process",
+			"command": [
+			  "python3",
+			  "/Users/USERNAME/PATH/TO/CORE_SYSTEM_FOLDER/core/src/python/api/getCounts.py",
+			  "PATH_TO_global_counts.json"
+			]
+		  }
+		}
+	  },
+	  "droxit": {
+		"handler": {
+		  "type": "http",
+		  "options": {
+			"host": "droxit.de",
+			"path": "/"
+		  }
+		}
+	  }
+	},
+	"POST": {
+	  "echo": {
+		"handler": {
+		  "type": "process",
+		  "command": [
+			"cat",
+			"-"
+		  ]
+		}
+	  },
+	  "companyProposal": {
+		"handler": {
+		  "type": "process",
+		  "command": [
+			"python3",
+			"/Users/PATH/TO/CORE/SYSTEM/core/src/python/companyproposal.py",
+			"-"
+		  ]
+		}
+	  },
+	  "getCompanies": {
+		"handler": {
+		  "type": "process",
+		  "command": [
+			"python3",
+			"/Users/PATH/TO/CORE/SYSTEM/core/src/python/neo4companies.py",
+			"-"
+		  ]
+		}
+	  }
+	}
+  }
+}

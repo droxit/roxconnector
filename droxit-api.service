@@ -1,0 +1,9 @@
+[Unit]
+Description=DroxIT Core System API-server
+Documentation=https://github.com/droxit/core/blob/dev/src/nodejs/README.md
+
+[Service]
+ExecStart=/usr/bin/node <app_folder>/droxitApi.js <config_path>
+
+[Install]
+WnatedBy=multi-user.target
