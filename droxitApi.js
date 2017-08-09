@@ -129,13 +129,18 @@ function setEndpoints(app, config, logger) {
 						res.status(500).send('{"reason": "internal server error"}');
 					}
 				} else if(endpoint.handler.type === 'plugin') {
-					var pname;
-					var func;
 					if(('name' in endpoint.handler) && ('function' in endpoint.handler)) { 
-						pname = endpoint.handler.name;
+						var pname = endpoint.handler.name;
+                        var func = endpoint.handler['function'];
+
+                        if((pname in _plugins) && (func in _plugins[pname])) {
+                        } else {
+                            logger.error({path: "/" + path.join("/")}, "faulty configuration: endpoint is either missing name or function parameter");
+                            res.status(500).send('{"reason": "internal server error"}');
+                        }
 					} else {
 						//TODO continue here
-						logger.error("faulty configuration: plugin handler is missing name or function argument");
+						logger.error({path: "/" + path.join("/")}, "faulty configuration: plugin handler is missing name or function argument");
 						res.status(500).send('{"reason": "internal server error"}');
 					}
 					var func = endpoint.handler.function;
