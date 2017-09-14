@@ -40,7 +40,7 @@ function setEndpoints(app, config, logger) {
 			if(req.method === 'POST' || req.method === 'PUT') {
 				if( !('content-type' in req.headers) ||
 					(req.headers['content-type'] !== 'application/json'
-					&& req.headers['content-type'] !== 'application/x-www-form-urlencoded')) {
+						&& req.headers['content-type'] !== 'application/x-www-form-urlencoded')) {
 					res.status(415).send('Invalid media type. MIME Type application/json required!');
 					return;
 				}
@@ -132,25 +132,25 @@ function setEndpoints(app, config, logger) {
 				} else if(endpoint.handler.type === 'plugin') {
 					if(('name' in endpoint.handler) && ('function' in endpoint.handler)) { 
 						var pname = endpoint.handler.name;
-                        var func = endpoint.handler['function'];
+						var func = endpoint.handler['function'];
 
-                        if((pname in _plugins) && (func in _plugins[pname])) {
-                            var data = {};
-                            if(req.body) {
-                                data = req.body;
-                            }
-                            _plugins[pname][func](data, function(e, r) {
-                                if(e) {
-                                    logger.error({plugin: pname, func: func, error: e}, "plugin returned an error");
-                                    res.status(e.code).send(e.message);
-                                } else {
-                                    res.send(r);
-                                }
-                            });
-                        } else {
-                            logger.error({path: "/" + path.join("/")}, "faulty configuration: plugin or function missing");
-                            res.status(500).send('{"reason": "internal server error"}');
-                        }
+						if((pname in _plugins) && (func in _plugins[pname])) {
+							var data = {};
+							if(req.body) {
+								data = req.body;
+							}
+							_plugins[pname][func](data, function(e, r) {
+								if(e) {
+									logger.error({plugin: pname, func: func, error: e}, "plugin returned an error");
+									res.status(e.code).send(e.message);
+								} else {
+									res.send(r);
+								}
+							});
+						} else {
+							logger.error({path: "/" + path.join("/")}, "faulty configuration: plugin or function missing");
+							res.status(500).send('{"reason": "internal server error"}');
+						}
 					} else {
 						//TODO continue here
 						logger.error({path: "/" + path.join("/")}, "faulty configuration: plugin handler is missing name or function argument");
@@ -172,7 +172,7 @@ function setEndpoints(app, config, logger) {
 }
 
 function startServer(app, config) {
-		var server = app.listen(config.SYSTEM.port, function() {
+	var server = app.listen(config.SYSTEM.port, function() {
 		var host = server.address().address;
 		var port = server.address().port;
 
@@ -184,11 +184,11 @@ function gatherPlugins(conf, logger) {
 	var plugins = {};
 	for(name in conf) {
 		var args = conf[name];
-        if(!('params' in args))
-            args.params = {};
-        args.params.logger = logger;
+		if(!('params' in args))
+			args.params = {};
+		args.params.logger = logger;
 		if('path' in args) {
-            plugins[name] = {};
+			plugins[name] = {};
 			require(args['path'])(plugins[name]);
 			plugins[name].init(args['params']);
 		} else {
@@ -197,7 +197,7 @@ function gatherPlugins(conf, logger) {
 		}
 	}
 
-    return plugins;
+	return plugins;
 }
 
 // loogerName is only relevant if you want to start multiple servers from within the same
