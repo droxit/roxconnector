@@ -3,6 +3,7 @@
  *
  * This server exposes a freely configurable REST service for interaction with the core system
  */
+var fs = require('fs');
 var express = require('express');
 var http = require('http');
 var bodyParser = require('body-parser');
@@ -134,8 +135,20 @@ function setEndpoints(app, config, logger) {
                         var func = endpoint.handler['function'];
 
                         if((pname in _plugins) && (func in _plugins[pname])) {
+                            var data = {};
+                            if(req.body) {
+                                data = req.body;
+                            }
+                            _plugins[pname][func](data, function(e, r) {
+                                if(e) {
+                                    logger.error({plugin: pname, func: func, error: e}, "plugin returned an error");
+                                    res.status(e.code).send(e.message);
+                                } else {
+                                    res.send(r);
+                                }
+                            });
                         } else {
-                            logger.error({path: "/" + path.join("/")}, "faulty configuration: endpoint is either missing name or function parameter");
+                            logger.error({path: "/" + path.join("/")}, "faulty configuration: plugin or function missing");
                             res.status(500).send('{"reason": "internal server error"}');
                         }
 					} else {
@@ -167,11 +180,30 @@ function startServer(app, config) {
 	});
 }
 
+function gatherPlugins(conf, logger) {
+	var plugins = {};
+	for(name in conf) {
+		var args = conf[name];
+        if(!('params' in args))
+            args.params = {};
+        args.params.logger = logger;
+		if('path' in args) {
+            plugins[name] = {};
+			require(args['path'])(plugins[name]);
+			plugins[name].init(args['params']);
+		} else {
+			console.error('Path parameter missing from plugin definition');
+			process.exit(1);
+		}
+	}
+
+    return plugins;
+}
+
 // loogerName is only relevant if you want to start multiple servers from within the same
 // process and want to separate their logging (which might be a good idea since their output would
 // be indistinguishable otherwise)
-exp.new = function(config, plugins, loggerName='droxit-api-server-logger') {
-	_plugins = plugins;
+exp.new = function(config, loggerName='droxit-api-server-logger') {
 	var app = express();
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({extended: true}));
@@ -198,6 +230,9 @@ exp.new = function(config, plugins, loggerName='droxit-api-server-logger') {
 		logger.fatal("missing port parameter in config file");
 		process.exit(1);
 	}
+
+    if('PLUGINS' in config)
+	    _plugins = gatherPlugins(config.PLUGINS, logger);
 
 	setEndpoints(app, config, logger);
 	startServer(app, config);
