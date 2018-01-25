@@ -13,7 +13,8 @@ if (process.argv[2] == undefined) {
 fs.readFile(process.argv[2], 'utf-8', function(err, config) {
 	if (!err) {
 		config = JSON.parse(config);
-		var server = apiSrv.new(config);
+		plugins = {};
+		var server = apiSrv.new(config, plugins);
 	} else {
 		console.error(err);
 		process.exit(1);
