@@ -2,7 +2,7 @@
 
 ## Files
 
-### droxitApi.js
+### impress.js
 This module provides a backend service with configureable REST endpoints. The following listing shows an example for the configuration's structure:
 
     {
