@@ -4,7 +4,7 @@
 #
 version: 2
 jobs:
-  build:
+  test_build_deploy:
     docker:
       - image: droxops/mosaic-node-py:0.0.4
 
@@ -21,7 +21,6 @@ jobs:
 
       - run:
           name: install node dependencies
-          working_directory: impress_plugin
           command: npm install
 
       - save_cache:
@@ -31,17 +30,21 @@ jobs:
 
       ### run automatic tests
       - run:
-          working_directory: impress_plugin
           name: run node tests
+          command: npm test
+
+      - run:
+          name: build node package
           command: |
-            . ../venv/bin/activate
-            npm test
+            export impress_folder='/opt/artifacts/impress/release'
+            if [ $CIRCLE_BRANCH != 'master' ]; then sed -i -e "s/\"version\".*/\"version\":\"$(cat VERSION)-dev$CIRCLE_BUILD_NUM\",/"; export impress_folder='/opt/artifacts/impress/dev'; fi
+            scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./$(npm pack) devpi@176.9.144.37:$impress_folder
 
 
 workflows:
   version: 2
   build_and_deploy:
     jobs:
-      - build
+      - test_build_deploy
 
 
