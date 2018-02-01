@@ -1,6 +1,6 @@
 {
-  "name": "core",
-  "version": "0.1.0",
+  "name": "impress",
+  "version": "0.2.0",
   "description": "impress - highly flexible REST API server",
   "main": "src/impress.js",
   "dependencies": {
