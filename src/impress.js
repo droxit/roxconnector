@@ -1,8 +1,12 @@
-/*
- * Droxit API server package
- *
- * This server exposes a freely configurable REST service for interaction with the core system
- */
+// 
+// impress API server package
+// This server exposes a freely configurable REST service for interaction with the core system
+//
+// devs@droxit.de - droxIT GmbH
+//
+// Copyright (c) 2018 droxIT GmbH
+//
+
 var fs = require('fs');
 var express = require('express');
 var http = require('http');
