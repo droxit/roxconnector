@@ -51,8 +51,7 @@ The file is divided into three segments: SYSTEM, REST and PLUGINS.
     "port": 8160,
     "loglevel": "warn",
     "logfile": "/var/log/impress/server.log"
-  },
-  ...
+  }
 }
 ```
 
@@ -136,7 +135,7 @@ Any plugin that is supposed to be loaded needs to be present in this section wit
 ## Writing plugins
 
 An impress plugin is a Node.js module that adheres to certain export conventions and exports an `init` function. `module.exports` must be a function that takes a single argument
-and registers it's endpoint handlers within this argument:
+and registers its endpoint handlers within this argument:
 
 ```javascript
 module.exports = function (container) {
