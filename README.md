@@ -4,6 +4,16 @@ A fast and flexible Node.js server for delivering RESTful APIs based on JSON dat
 The endpoint definition resides inside the servers config file - not within the code.
 Endpoints can be configured to either invoke a process, be relayed to another server via http or mapped onto a plugin function.
 
+## Why use impress?
+
+There are serveral reasons for using impress as your API gateway:
+
+* Easy setup: impress is operational within minutes
+* Integration with other services: you can use impress to map REST calls to other services via HTTP
+* Extensibility: add new functionality to your endpoints with your own Node modules - access your own code from within the API server itself
+* REST setup inside the configuration: define your whole API in a single JSON file. Simply restart impress to see the changes
+* In essence: be fast and flexible
+
 ## Installation
 
 The following software components need to installed before proceeding:
