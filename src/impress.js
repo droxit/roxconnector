@@ -69,7 +69,7 @@ function setEndpoints(app, config, logger) {
 					var response = '';
 					var error = '';
 
-					if(req.body) {
+					if(req.body && req.body.length) {
 						childProcess.stdin.write(JSON.stringify(req.body));
 						childProcess.stdin.end();
 					}
