@@ -61,6 +61,12 @@ function setEndpoints(app, config, logger) {
 					return;
 				}
 			}
+
+			var body = false;
+			if (req.body && Object.keys(req.body).length !== 0) {
+				body = req.body;
+			}
+
 			if('handler' in endpoint) {
 				if (endpoint.handler.type == 'process') {
 					var jobConfig = endpoint.handler.command;
@@ -69,8 +75,8 @@ function setEndpoints(app, config, logger) {
 					var response = '';
 					var error = '';
 
-					if(req.body && req.body.length) {
-						childProcess.stdin.write(JSON.stringify(req.body));
+					if(body) {
+						childProcess.stdin.write(JSON.stringify(body));
 						childProcess.stdin.end();
 					}
 
@@ -140,8 +146,8 @@ function setEndpoints(app, config, logger) {
 
 						if((pname in _plugins) && (func in _plugins[pname])) {
 							var data = {};
-							if(req.body) {
-								data = req.body;
+							if(body) {
+								data = body;
 							}
 							_plugins[pname][func](data, function(e, r) {
 								if(e) {
