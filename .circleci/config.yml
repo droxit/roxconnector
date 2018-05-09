@@ -36,8 +36,8 @@ jobs:
       - run:
           name: build node package
           command: |
-            export impress_folder='/opt/artifacts/impress/release'
-            if [ $CIRCLE_BRANCH != 'master' ]; then sed -i -e "s/\"version\".*/\"version\":\"$(cat VERSION)-dev$CIRCLE_BUILD_NUM\",/" package.json; export impress_folder='/opt/artifacts/impress/dev'; fi
+            export impress_folder='/opt/artifacts/roxconnector/release'
+            if [ $CIRCLE_BRANCH != 'master' ]; then sed -i -e "s/\"version\".*/\"version\":\"$(cat VERSION)-dev$CIRCLE_BUILD_NUM\",/" package.json; export impress_folder='/opt/artifacts/roxconnector/dev'; fi
             scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./$(npm pack) devpi@176.9.144.37:$impress_folder
 
 
