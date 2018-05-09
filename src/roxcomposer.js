@@ -1,5 +1,5 @@
 // 
-// impress API server package
+// ROXconnector API server package
 // This server exposes a freely configurable REST service for interaction with the core system
 //
 // devs@droxit.de - droxIT GmbH
