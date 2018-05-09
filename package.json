@@ -1,7 +1,7 @@
 {
-  "name": "impress",
+  "name": "roxconnector",
   "version": "0.2.0",
-  "description": "impress - highly flexible REST API server",
+  "description": "droxit ROXconnector - highly flexible REST API server",
   "main": "src/impress.js",
   "dependencies": {
     "body-parser": "^1.15.1",
@@ -16,12 +16,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/droxit/impress.git"
+    "url": "git+https://github.com/droxit/roxconnector.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/droxit/impress/issues"
+    "url": "https://github.com/droxit/roxconnector/issues"
   },
-  "homepage": "https://github.com/droxit/impress#readme"
+  "homepage": "https://github.com/droxit/roxconnector#readme"
 }
