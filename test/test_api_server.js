@@ -1,6 +1,6 @@
 var http = require('http');
 var request = require('supertest');
-var apiSrv = require('../src/roxcomposer.js');
+var apiSrv = require('../src/roxconnector.js');
 var Emitter = require('events').EventEmitter;
 var emitter = new Emitter();
 
