@@ -1,6 +1,6 @@
 [Unit]
-Description=DroxIT impress API-server
-Documentation=https://github.com/droxit/impress-doc
+Description=DroxIT ROXcomposer API-server
+Documentation=https://github.com/droxit/roxcomposer-doc
 
 [Service]
 ExecStart=/usr/bin/node <app_folder>/startServer.js <config_path>

@@ -1,17 +1,17 @@
-# impress API server
+# ROXconnector API server
 
 A fast and flexible Node.js server for delivering RESTful APIs based on JSON data serialization - with plugin support.
 The endpoint definition resides inside the servers config file - not within the code.
 Endpoints can be configured to either invoke a process, be relayed to another server via http or mapped onto a plugin function.
 
-## Why use impress?
+## Why use ROXconnector?
 
-There are serveral reasons for using impress as your API gateway:
+There are serveral reasons for using ROXconnector as your API gateway:
 
-* Easy setup: impress is operational within minutes
-* Integration with other services: you can use impress to map REST calls to other services via HTTP
+* Easy setup: ROXconnector is operational within minutes
+* Integration with other services: you can use ROXconnector to map REST calls to other services via HTTP
 * Extensibility: add new functionality to your endpoints with your own Node modules - access your own code from within the API server itself
-* REST setup inside the configuration: define your whole API in a single JSON file. Simply restart impress to see the changes
+* REST setup inside the configuration: define your whole API in a single JSON file. Simply restart ROXconnector to see the changes
 * In essence: be fast and flexible
 
 ## Installation
@@ -21,17 +21,17 @@ The following software components need to installed before proceeding:
 * [Node.js 8.10.0](https://nodejs.org) or higher - a JavaScript runtime.
 * [npm](https://www.npmjs.com/) - a package manager for JavaScript applications.
 
-Set up an application folder for impress to reside in - we will use `/opt/impress` as an example.
+Set up an application folder for ROXconnector to reside in - we will use `/opt/roxconnector` as an example.
 Then you simply have to extract the package and install the dependencies via `npm`.
 
 ```bash
-mkdir /opt/impress/
-cd /opt/impress
-tar xf /tmp/impress-0.2.0.tgz
+mkdir /opt/roxconnector/
+cd /opt/roxconnector
+tar xf /tmp/roxconnector-0.2.0.tgz
 npm install
 ```
 
-This will install the node dependencies under `node_modules` within the impress folder. The dependencies can also be installed system wide by providing the `-g` flag.
+This will install the node dependencies under `node_modules` within the roxconnector folder. The dependencies can also be installed system wide by providing the `-g` flag.
 
 ```bash
 npm install -g
@@ -41,16 +41,16 @@ This step usually requires superuser priviledges.
 
 ## Usage
 
-You will need a working configuration file to run `impress` - explained below.
+You will need a working configuration file to run `ROXconnector` - explained below.
 
 ```bash
-cd /opt/impress
+cd /opt/roxconnector
 node startServer.js path/to/config.js
 ```
 
 ## Configuration
 
-impress is configured via one central JSON config file which contains all needed parameters.
+ROXconnector is configured via one central JSON config file which contains all needed parameters.
 The file is divided into three segments: SYSTEM, REST and PLUGINS.
 
 ### SYSTEM
@@ -60,7 +60,7 @@ The file is divided into three segments: SYSTEM, REST and PLUGINS.
   "SYSTEM": {
     "port": 8160,
     "loglevel": "warn",
-    "logfile": "/var/log/impress/server.log"
+    "logfile": "/var/log/roxconnector/server.log"
   }
 }
 ```
@@ -74,7 +74,7 @@ If you have installed the node dependencies globally the bunyan application shou
 # pipe console output into bunyan
 node start_server.js | node_modules/bunyan/bin/bunyan
 # or view logs on disk
-cat /var/log/impress/server.log | node_modules/bunyan/bin/bunyan
+cat /var/log/roxconnector/server.log | node_modules/bunyan/bin/bunyan
 ```
 
 ### REST
@@ -144,7 +144,7 @@ Any plugin that is supposed to be loaded needs to be present in this section wit
 
 ## Writing plugins
 
-An impress plugin is a Node.js module that adheres to certain export conventions and exports an `init` function. `module.exports` must be a function that takes a single argument
+An ROXconnector plugin is a Node.js module that adheres to certain export conventions and exports an `init` function. `module.exports` must be a function that takes a single argument
 and registers its endpoint handlers within this argument:
 
 ```javascript
@@ -162,7 +162,7 @@ init( { plugin_parameter: "some_information" } );
 
 Use this to initialize your plugin.
 
-All exported functions can be mapped to REST endpoints in the impress config file. In the example config above we mapped `/nested/path` to `some_function`.
+All exported functions can be mapped to REST endpoints in the ROXconnector config file. In the example config above we mapped `/nested/path` to `some_function`.
 Assuming the following client request:
 
 ```bash
@@ -173,7 +173,7 @@ the resulting function call would be `sfunc({arg: 123})`.
 
 
 ## droxit-api.service and install\_service.sh
-The impress.service file allows the api server to be deployed as a [systemd](https://en.wikipedia.org/wiki/Systemd) service. To depoy the service run
+The roxconnector.service file allows the api server to be deployed as a [systemd](https://en.wikipedia.org/wiki/Systemd) service. To depoy the service run
 
     sudo install_service.sh /path/to/config.js
 

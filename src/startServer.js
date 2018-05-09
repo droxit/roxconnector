@@ -2,7 +2,7 @@
  * Helper script to start an API server with a given config file
  */
 var fs = require('fs');
-var apiSrv = require('./impress.js');
+var apiSrv = require('./roxcomposer.js');
 
 if (process.argv[2] == undefined) {
 	console.error('The server needs a valid config file, passed as the first command line parameter, so please start the server again with a config file.');
