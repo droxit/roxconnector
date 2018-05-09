@@ -1,0 +1,50 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2
+jobs:
+  test_build_deploy:
+    docker:
+      - image: droxops/mosaic-node-py:0.0.4
+
+    working_directory: ~/repo
+
+    steps:
+      # checkout the code of the branch from github, which triggers the build
+      - checkout
+
+      - restore_cache:
+          keys:
+            - node-dependency-cache-{{ checksum "package.json" }}
+            - node-dependency-cache-
+
+      - run:
+          name: install node dependencies
+          command: npm install
+
+      - save_cache:
+          key: node-dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+
+      ### run automatic tests
+      - run:
+          name: run node tests
+          command: npm test
+
+      - run:
+          name: build node package
+          command: |
+            export impress_folder='/opt/artifacts/roxconnector/release'
+            if [ $CIRCLE_BRANCH != 'master' ]; then sed -i -e "s/\"version\".*/\"version\":\"$(cat VERSION)-dev$CIRCLE_BUILD_NUM\",/" package.json; export impress_folder='/opt/artifacts/roxconnector/dev'; fi
+            scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./$(npm pack) devpi@176.9.144.37:$impress_folder
+
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - test_build_deploy
+
+

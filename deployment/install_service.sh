@@ -4,7 +4,7 @@
 # expects the path to a config file as the only argument
 
 wd=$(pwd)
-target=/usr/lib/systemd/system/droxit-api.service
+target=/usr/lib/systemd/system/roxcomposer.service
 wd=${wd//\//\\/}
 
 if [ "$1" == "" ]; then
@@ -14,4 +14,4 @@ fi
 
 conf=${1//\//\\/}
 
-sed -e "s/<app_folder>/"$wd"/" -e "s/<config_path>/"$conf"/" droxit-api.service > $target
+sed -e "s/<app_folder>/"$wd"/" -e "s/<config_path>/"$conf"/" roxcomposer.service > $target

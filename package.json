@@ -1,8 +1,8 @@
 {
-  "name": "core",
-  "version": "1.0.0",
-  "description": "droxit Core System ================== This is the readme file of the droxit core system for analyzing and crawling data. It contains requirements, elements and the standard process to use the most basic items of the system.",
-  "main": "droxitApi.js",
+  "name": "roxconnector",
+  "version": "0.2.0",
+  "description": "droxit ROXconnector - highly flexible REST API server",
+  "main": "src/impress.js",
   "dependencies": {
     "body-parser": "^1.15.1",
     "express": "^4.13.4",
@@ -12,16 +12,16 @@
     "supertest": "^2.0.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test/test_api_server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/droxit/core.git"
+    "url": "git+https://github.com/droxit/roxconnector.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/droxit/core/issues"
+    "url": "https://github.com/droxit/roxconnector/issues"
   },
-  "homepage": "https://github.com/droxit/core#readme"
+  "homepage": "https://github.com/droxit/roxconnector#readme"
 }
