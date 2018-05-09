@@ -1,0 +1,9 @@
+[Unit]
+Description=DroxIT impress API-server
+Documentation=https://github.com/droxit/impress-doc
+
+[Service]
+ExecStart=/usr/bin/node <app_folder>/startServer.js <config_path>
+
+[Install]
+WnatedBy=multi-user.target

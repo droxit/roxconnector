@@ -1,8 +1,13 @@
-/*
- * Droxit API server package
- *
- * This server exposes a freely configurable REST service for interaction with the core system
- */
+// 
+// impress API server package
+// This server exposes a freely configurable REST service for interaction with the core system
+//
+// devs@droxit.de - droxIT GmbH
+//
+// Copyright (c) 2018 droxIT GmbH
+//
+
+var fs = require('fs');
 var express = require('express');
 var http = require('http');
 var bodyParser = require('body-parser');
@@ -11,6 +16,7 @@ var spawn = require('child_process').spawn;
 var bunyan = require('bunyan');
 
 var exp = module.exports;
+var _plugins = {};
 
 function setEndpoints(app, config, logger) {
 	// handle errors gracefully
@@ -38,7 +44,7 @@ function setEndpoints(app, config, logger) {
 			if(req.method === 'POST' || req.method === 'PUT') {
 				if( !('content-type' in req.headers) ||
 					(req.headers['content-type'] !== 'application/json'
-					&& req.headers['content-type'] !== 'application/x-www-form-urlencoded')) {
+						&& req.headers['content-type'] !== 'application/x-www-form-urlencoded')) {
 					res.status(415).send('Invalid media type. MIME Type application/json required!');
 					return;
 				}
@@ -55,6 +61,12 @@ function setEndpoints(app, config, logger) {
 					return;
 				}
 			}
+
+			var body = false;
+			if (req.body && Object.keys(req.body).length !== 0) {
+				body = req.body;
+			}
+
 			if('handler' in endpoint) {
 				if (endpoint.handler.type == 'process') {
 					var jobConfig = endpoint.handler.command;
@@ -63,8 +75,8 @@ function setEndpoints(app, config, logger) {
 					var response = '';
 					var error = '';
 
-					if(req.body) {
-						childProcess.stdin.write(JSON.stringify(req.body));
+					if(body) {
+						childProcess.stdin.write(JSON.stringify(body));
 						childProcess.stdin.end();
 					}
 
@@ -127,6 +139,34 @@ function setEndpoints(app, config, logger) {
 						logger.error({path: "/" + path.join("/")}, "faulty configuration: endpoint is missing options field");
 						res.status(500).send('{"reason": "internal server error"}');
 					}
+				} else if(endpoint.handler.type === 'plugin') {
+					if(('name' in endpoint.handler) && ('function' in endpoint.handler)) { 
+						var pname = endpoint.handler.name;
+						var func = endpoint.handler['function'];
+
+						if((pname in _plugins) && (func in _plugins[pname])) {
+							var data = {};
+							if(body) {
+								data = body;
+							}
+							_plugins[pname][func](data, function(e, r) {
+								if(e) {
+									logger.error({plugin: pname, func: func, error: e}, "plugin returned an error");
+									res.status(e.code).send(e.message);
+								} else {
+									res.send(r);
+								}
+							});
+						} else {
+							logger.error({path: "/" + path.join("/")}, "faulty configuration: plugin or function missing");
+							res.status(500).send('{"reason": "internal server error"}');
+						}
+					} else {
+						//TODO continue here
+						logger.error({path: "/" + path.join("/")}, "faulty configuration: plugin handler is missing name or function argument");
+						res.status(500).send('{"reason": "internal server error"}');
+					}
+					var func = endpoint.handler.function;
 				} else {
 					logger.error({path: "/" + path.join("/")}, "faulty configuration: invalid endpoint handler type");
 					res.status(500).send('{"reason": "internal server error"}');
@@ -142,12 +182,32 @@ function setEndpoints(app, config, logger) {
 }
 
 function startServer(app, config) {
-		var server = app.listen(config.SYSTEM.port, function() {
+	var server = app.listen(config.SYSTEM.port, function() {
 		var host = server.address().address;
 		var port = server.address().port;
 
 		logger.info("droxitApi server is listening at http://%s:%s", host, port);
 	});
+}
+
+function gatherPlugins(conf, logger) {
+	var plugins = {};
+	for(name in conf) {
+		var args = conf[name];
+		if(!('params' in args))
+			args.params = {};
+		args.params.logger = logger;
+		if('path' in args) {
+			plugins[name] = {};
+			require(args['path'])(plugins[name]);
+			plugins[name].init(args['params']);
+		} else {
+			console.error('Path parameter missing from plugin definition');
+			process.exit(1);
+		}
+	}
+
+	return plugins;
 }
 
 // loogerName is only relevant if you want to start multiple servers from within the same
@@ -180,6 +240,9 @@ exp.new = function(config, loggerName='droxit-api-server-logger') {
 		logger.fatal("missing port parameter in config file");
 		process.exit(1);
 	}
+
+    if('PLUGINS' in config)
+	    _plugins = gatherPlugins(config.PLUGINS, logger);
 
 	setEndpoints(app, config, logger);
 	startServer(app, config);
