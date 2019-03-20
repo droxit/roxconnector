@@ -212,12 +212,20 @@ function setEndpoints(app, config, logger) {
 }
 
 function startServer(app, config) {
-	var server = app.listen(config.SYSTEM.port, function() {
-		var host = server.address().address;
-		var port = server.address().port;
+	try{
+        var server = app.listen(config.SYSTEM.port, function() {
+            var host = server.address().address;
+            var port = server.address().port;
 
-		logger.info("droxitApi server is listening at http://%s:%s", host, port);
-	});
+            logger.info("droxitApi server is listening at http://%s:%s", host, port);
+        }).on('error', (err) => {
+            logger.fatal("could not start server - %s", err)
+            process.exit(1)
+        });
+	} catch (e){
+        logger.fatal("could not start server - %s", e)
+        process.exit(1)
+	}
 }
 
 function gatherPlugins(conf, logger) {
