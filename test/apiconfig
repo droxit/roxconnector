@@ -1,0 +1,38 @@
+{ "SYSTEM": {
+		"port": 8601
+	},
+	"REST": {
+		"GET": {
+			"fortune_cookie": {
+				"handler": {
+					"type": "http",
+					"options": {
+						"host": "localhost",
+						"port": 8602,
+						"path": "/"
+					}
+				}
+			}
+		},
+		"POST": {
+			"echo": {
+				"handler": {
+					"type": "process",
+					"command": ["cat", "-"]
+				}
+			},
+			"fortune_cookie": {
+				"handler": {
+					"type": "http",
+					"data": "-",
+					"options": {
+						"method": "POST",
+						"host": "localhost",
+						"port": 8602,
+						"path": "/"
+					}
+				}
+			}
+		}
+	}
+}
