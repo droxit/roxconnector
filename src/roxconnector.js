@@ -171,11 +171,12 @@ function setEndpoints(app, config, logger) {
 							}
 							_plugins[pname][func](data, function(e, r) {
 								if (e) {
+								    /*
 									logger.error({
 										plugin: pname,
 										func: func,
 										error: e
-									}, "plugin returned an error");
+									}, "plugin returned an error"); */
 									res.status(e.code).send(e.message);
 								} else {
 									res.send(r);
