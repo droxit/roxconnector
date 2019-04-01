@@ -1,6 +1,6 @@
 {
   "name": "roxconnector",
-  "version": "0.2.0",
+  "version": "0.4.1",
   "description": "droxit ROXconnector - highly flexible REST API server",
   "main": "src/impress.js",
   "dependencies": {
