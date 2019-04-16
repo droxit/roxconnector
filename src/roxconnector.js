@@ -1,4 +1,4 @@
-// 
+//
 // ROXconnector API server package
 // This server exposes a freely configurable REST service for interaction with the core system
 //
@@ -171,7 +171,7 @@ function setEndpoints(app, config, logger) {
 							}
 							_plugins[pname][func](data, function(e, r) {
 								if (e) {
-								    /*
+									/*
 									logger.error({
 										plugin: pname,
 										func: func,
@@ -213,20 +213,20 @@ function setEndpoints(app, config, logger) {
 }
 
 function startServer(app, config) {
-    try{
-        var server = app.listen(config.SYSTEM.port, function() {
-            var host = server.address().address;
-            var port = server.address().port;
+	try {
+		var server = app.listen(config.SYSTEM.port, function() {
+			var host = server.address().address;
+			var port = server.address().port;
 
-            logger.info("droxitApi server is listening at http://%s:%s", host, port);
-        }).on('error', (err) => {
-            logger.fatal("could not start server - %s", err)
-            process.exit(1)
-        });
-    } catch (e){
-        logger.fatal("could not start server - %s", e)
-        process.exit(1)
-    }
+			logger.info("droxitApi server is listening at http://%s:%s", host, port);
+		}).on('error', (err) => {
+			logger.fatal("could not start server - %s", err)
+			process.exit(1)
+		});
+	} catch (e) {
+		logger.fatal("could not start server - %s", e)
+		process.exit(1)
+	}
 }
 
 function gatherPlugins(conf, logger) {
@@ -254,7 +254,14 @@ function gatherPlugins(conf, logger) {
 // be indistinguishable otherwise)
 exp.new = function(config, loggerName = 'droxit-api-server-logger') {
 	var app = express();
-	app.use(bodyParser.json());
+	if ('upload_limit' in config.SYSTEM) {
+		var limit = {
+			'limit': config.SYSTEM.upload_limit,
+		}
+		app.use(bodyParser.json(limit));
+	} else {
+		app.use(bodyParser.json());
+	}
 	app.use(bodyParser.urlencoded({
 		extended: true
 	}));
