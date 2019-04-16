@@ -58,16 +58,17 @@ The file is divided into three segments: SYSTEM, REST and PLUGINS.
 ```json
 {
   "SYSTEM": {
-    "port": 8160,
-    "loglevel": "warn",
-    "logfile": "/var/log/roxconnector/server.log"
+    "port": 7475,
+    "upload_limit": "1000kb",
+    "loglevel": "info",
+    "logfile": "../logs/roxconnector.log"
   }
 }
 ```
 
-The config's **SYSTEM** portion contains startup information for the server process. The mandatory _port_ parameter defines the TCP port to listen on while _loglevel_ and _logfile_ parameters are
-optional. The default log level is _warn_ and output is directed to _stderr_ if the _logfile_ option is missing. The server uses [Bunyan](https://github.com/trentm/node-bunyan) as its logging facility.
-Bunyan's output is well suited for automated handling but not as well readable by humans. Therefore the bunyan package provides a binary that converts the logs into a format that's more legible.
+The config's **SYSTEM** portion contains startup information for the server process. The mandatory _port_ parameter defines the TCP port to listen on, whereas _upload_limit_ adjusts the maximum upload size.
+_loglevel_ and _logfile_ parameters are optional. The default log level is _warn_ and output is directed to _stderr_ if the _logfile_ option is missing. The server uses [Bunyan](https://github.com/trentm/node-bunyan)
+as its logging facility. Bunyan's output is well suited for automated handling but not as well readable by humans. Therefore the bunyan package provides a binary that converts the logs into a format that's more legible.
 If you have installed the node dependencies globally the bunyan application should be inside your path environment. Otherwise you can call it from the `node_modules` folder:
 
 ```bash
