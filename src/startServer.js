@@ -21,6 +21,7 @@
  * | along with this program. See also <http://www.gnu.org/licenses/>.    |
  * |                                                                      |
  * |----------------------------------------------------------------------|
+ *
  */
 
 var fs = require('fs');
