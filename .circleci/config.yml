@@ -38,7 +38,7 @@ jobs:
           command: |
             export impress_folder='~/repo/roxconnector/release'
             if [ $CIRCLE_BRANCH != 'master' ]; then sed -i -e "s/\"version\".*/\"version\":\"$(cat VERSION)-dev$CIRCLE_BUILD_NUM\",/" package.json; export impress_folder='~/repo/roxconnector/dev'; fi
-            scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./$(npm pack) artifact@artifact.droxit.de:$impress_folder
+            scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./$(npm pack) artifact@artifacts.droxit.de:$impress_folder
 
 
 workflows:
