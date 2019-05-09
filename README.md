@@ -4,6 +4,23 @@ A fast and flexible Node.js server for delivering RESTful APIs based on JSON dat
 The endpoint definition resides inside the servers config file - not within the code.
 Endpoints can be configured to either invoke a process, be relayed to another server via http or mapped onto a plugin function.
 
+## Open Source
+
+Copyright (C) 2019  droxIT GmbH - devs@droxit.de
+
+ROXconnector is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You have received a copy of the GNU General Public License
+along with this program ([plain text](COPYING), [Markdown](COPYING.md)). See also <http://www.gnu.org/licenses/>.
+
 ## Why use ROXconnector?
 
 There are serveral reasons for using ROXconnector as your API gateway:
@@ -27,7 +44,7 @@ Then you simply have to extract the package and install the dependencies via `np
 ```bash
 mkdir /opt/roxconnector/
 cd /opt/roxconnector
-tar xf /tmp/roxconnector-0.2.0.tgz
+tar xf /tmp/roxconnector-0.4.2.tgz
 npm install
 ```
 
@@ -58,16 +75,17 @@ The file is divided into three segments: SYSTEM, REST and PLUGINS.
 ```json
 {
   "SYSTEM": {
-    "port": 8160,
-    "loglevel": "warn",
-    "logfile": "/var/log/roxconnector/server.log"
+    "port": 7475,
+    "upload_limit": "1000kb",
+    "loglevel": "info",
+    "logfile": "../logs/roxconnector.log"
   }
 }
 ```
 
-The config's **SYSTEM** portion contains startup information for the server process. The mandatory _port_ parameter defines the TCP port to listen on while _loglevel_ and _logfile_ parameters are
-optional. The default log level is _warn_ and output is directed to _stderr_ if the _logfile_ option is missing. The server uses [Bunyan](https://github.com/trentm/node-bunyan) as its logging facility.
-Bunyan's output is well suited for automated handling but not as well readable by humans. Therefore the bunyan package provides a binary that converts the logs into a format that's more legible.
+The config's **SYSTEM** portion contains startup information for the server process. The mandatory _port_ parameter defines the TCP port to listen on, whereas _upload_limit_ adjusts the maximum upload size.
+_loglevel_ and _logfile_ parameters are optional. The default log level is _warn_ and output is directed to _stderr_ if the _logfile_ option is missing. The server uses [Bunyan](https://github.com/trentm/node-bunyan)
+as its logging facility. Bunyan's output is well suited for automated handling but not as well readable by humans. Therefore the bunyan package provides a binary that converts the logs into a format that's more legible.
 If you have installed the node dependencies globally the bunyan application should be inside your path environment. Otherwise you can call it from the `node_modules` folder:
 
 ```bash

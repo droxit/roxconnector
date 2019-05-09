@@ -1,11 +1,28 @@
-// 
-// ROXconnector API server package
-// This server exposes a freely configurable REST service for interaction with the core system
-//
-// devs@droxit.de - droxIT GmbH
-//
-// Copyright (c) 2018 droxIT GmbH
-//
+/*
+ * ROXconnector API server package
+ * This server exposes a freely configurable REST service for interaction with the core system
+ *
+ * |------------------- OPEN SOURCE LICENSE DISCLAIMER -------------------|
+ * |                                                                      |
+ * | Copyright (C) 2019  droxIT GmbH - devs@droxit.de                     |
+ * |                                                                      |
+ * | This file is part of ROXconnector.                                   |
+ * |                                                                      |
+ * | ROXconnector is free software: you can redistribute it and/or modify |
+ * | it under the terms of the GNU General Public License as published by |
+ * | the Free Software Foundation, either version 3 of the License, or    |
+ * | (at your option) any later version.                                  |
+ * |                                                                      |
+ * | This program is distributed in the hope that it will be useful,      |
+ * | but WITHOUT ANY WARRANTY; without even the implied warranty of       |
+ * | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the         |
+ * | GNU General Public License for more details.                         |
+ * |                                                                      |
+ * | You have received a copy of the GNU General Public License           |
+ * | along with this program. See also <http://www.gnu.org/licenses/>.    |
+ * |                                                                      |
+ * |----------------------------------------------------------------------|
+ */
 
 var fs = require('fs');
 var express = require('express');
@@ -171,7 +188,7 @@ function setEndpoints(app, config, logger) {
 							}
 							_plugins[pname][func](data, function(e, r) {
 								if (e) {
-								    /*
+									/*
 									logger.error({
 										plugin: pname,
 										func: func,
@@ -213,20 +230,20 @@ function setEndpoints(app, config, logger) {
 }
 
 function startServer(app, config) {
-    try{
-        var server = app.listen(config.SYSTEM.port, function() {
-            var host = server.address().address;
-            var port = server.address().port;
+	try {
+		var server = app.listen(config.SYSTEM.port, function() {
+			var host = server.address().address;
+			var port = server.address().port;
 
-            logger.info("droxitApi server is listening at http://%s:%s", host, port);
-        }).on('error', (err) => {
-            logger.fatal("could not start server - %s", err)
-            process.exit(1)
-        });
-    } catch (e){
-        logger.fatal("could not start server - %s", e)
-        process.exit(1)
-    }
+			logger.info("droxitApi server is listening at http://%s:%s", host, port);
+		}).on('error', (err) => {
+			logger.fatal("could not start server - %s", err)
+			process.exit(1)
+		});
+	} catch (e) {
+		logger.fatal("could not start server - %s", e)
+		process.exit(1)
+	}
 }
 
 function gatherPlugins(conf, logger) {
@@ -254,7 +271,14 @@ function gatherPlugins(conf, logger) {
 // be indistinguishable otherwise)
 exp.new = function(config, loggerName = 'droxit-api-server-logger') {
 	var app = express();
-	app.use(bodyParser.json());
+	if ('upload_limit' in config.SYSTEM) {
+		var limit = {
+			'limit': config.SYSTEM.upload_limit,
+		}
+		app.use(bodyParser.json(limit));
+	} else {
+		app.use(bodyParser.json());
+	}
 	app.use(bodyParser.urlencoded({
 		extended: true
 	}));
