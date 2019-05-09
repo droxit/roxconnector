@@ -1,3 +1,10 @@
+# v0.4.2
+
+## New
+
+* License switched to GPL
+* upload limit is configurable under SYSTEM.upload\_limit
+
 # v0.4.1
 
 ## New
