@@ -44,7 +44,7 @@ Then you simply have to extract the package and install the dependencies via `np
 ```bash
 mkdir /opt/roxconnector/
 cd /opt/roxconnector
-tar xf /tmp/roxconnector-0.2.0.tgz
+tar xf /tmp/roxconnector-0.4.2.tgz
 npm install
 ```
 
