@@ -19,7 +19,7 @@
     "url": "git+https://github.com/droxit/roxconnector.git"
   },
   "author": "",
-  "license": "GPLv3",
+  "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/droxit/roxconnector/issues"
   },
